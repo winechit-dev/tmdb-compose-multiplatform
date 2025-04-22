@@ -38,6 +38,9 @@ kotlin {
 
             // Room database
             implementation(libs.androidx.room.runtime)
+
+            // Ktor Client
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -52,6 +55,15 @@ kotlin {
             // Room database
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
+
+            // Ktor Client
+            implementation(libs.ktor.client.core)
+            implementation(libs.kotlinx.coroutines.core)
+        }
+
+        iosMain.dependencies {
+            // Ktor Client
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
