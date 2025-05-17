@@ -7,4 +7,9 @@ plugins {
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
+    alias(libs.plugins.ktlint) apply false
+}
+
+subprojects {
+    apply(from = "${project.rootDir}/misc/script-ktlint.gradle")
 }

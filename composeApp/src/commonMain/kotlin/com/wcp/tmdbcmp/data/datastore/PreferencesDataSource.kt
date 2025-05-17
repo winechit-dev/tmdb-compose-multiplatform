@@ -12,17 +12,19 @@ import okio.Path.Companion.toPath
 import okio.SYSTEM
 
 class PreferencesDataSource(
-    private val producePath: () -> String
+    private val producePath: () -> String,
 ) {
-    private val settingsDataStore = DataStoreFactory.create(
-        storage = OkioStorage(
-            fileSystem = FileSystem.SYSTEM,
-            serializer = SettingDataSerializer,
-            producePath = {
-                producePath().toPath()
-            }
+    private val settingsDataStore =
+        DataStoreFactory.create(
+            storage =
+                OkioStorage(
+                    fileSystem = FileSystem.SYSTEM,
+                    serializer = SettingDataSerializer,
+                    producePath = {
+                        producePath().toPath()
+                    },
+                ),
         )
-    )
 
     val settingsDataFlow: Flow<SettingsDataResponse>
         get() = settingsDataStore.data

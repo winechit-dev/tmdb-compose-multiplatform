@@ -1,3 +1,6 @@
+
+@file:Suppress("ktlint")
+
 package com.wcp.tmdbcmp
 
 import androidx.compose.ui.window.ComposeUIViewController

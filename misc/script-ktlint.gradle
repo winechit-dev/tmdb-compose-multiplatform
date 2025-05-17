@@ -1,0 +1,21 @@
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+ktlint {
+    version = "1.3.1"
+    debug = true
+    android = true
+    outputToConsole = true
+    reporters {
+        reporter "checkstyle"
+        reporter "plain"
+    }
+
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
+    }
+}
+
+dependencies {
+    ktlintRuleset "io.nlopez.compose.rules:ktlint:0.4.11"
+}

@@ -14,29 +14,30 @@ import okio.BufferedSink
 import okio.BufferedSource
 import okio.use
 
-
 internal object SettingDataSerializer : OkioSerializer<SettingsDataResponse> {
-
     override val defaultValue: SettingsDataResponse
-        get() = SettingsDataResponse(
-            themeBrand = ThemeBrandResponse.DEFAULT,
-            darkThemeConfig = DarkThemeConfigResponse.FOLLOW_SYSTEM,
-            useDynamicColor = false
-        )
+        get() =
+            SettingsDataResponse(
+                themeBrand = ThemeBrandResponse.DEFAULT,
+                darkThemeConfig = DarkThemeConfigResponse.FOLLOW_SYSTEM,
+                useDynamicColor = false,
+            )
 
-    override suspend fun readFrom(source: BufferedSource): SettingsDataResponse {
-        return try {
+    override suspend fun readFrom(source: BufferedSource): SettingsDataResponse =
+        try {
             Json.decodeFromString(SettingsDataResponse.serializer(), source.readUtf8())
         } catch (serialization: SerializationException) {
             throw CorruptionException("Unable to read Settings", serialization)
         }
-    }
 
-    override suspend fun writeTo(t: SettingsDataResponse, sink: BufferedSink) {
+    override suspend fun writeTo(
+        t: SettingsDataResponse,
+        sink: BufferedSink,
+    ) {
         withContext(Dispatchers.IO) {
             sink.use {
                 it.writeUtf8(
-                    Json.encodeToString(SettingsDataResponse.serializer(), t)
+                    Json.encodeToString(SettingsDataResponse.serializer(), t),
                 )
             }
         }

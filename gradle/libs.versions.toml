@@ -24,6 +24,7 @@ coroutines = "1.10.1"
 kotlinx-serialization = "1.8.0"
 customPlugin = "1.0.0"
 jetbrainsKotlinJvm = "2.1.10"
+ktlint = "12.2.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -72,6 +73,7 @@ kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 room = { id = "androidx.room", version.ref = "androidx-room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 
 ## Custom Plugin
 convention-application = { id = "conventionPluginApplication.android.application", version.ref = "customPlugin" }
