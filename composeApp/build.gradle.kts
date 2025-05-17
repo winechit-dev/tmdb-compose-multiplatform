@@ -57,6 +57,11 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
 
+            // DataStore
+            api(libs.androidx.datastore.preferences.core)
+            api(libs.androidx.datastore.core.okio)
+            implementation(libs.okio)
+
             // Ktor Client
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.serialization.kotlinx.json)

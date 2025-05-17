@@ -15,6 +15,8 @@ compose-multiplatform = "1.7.3"
 junit = "4.13.2"
 kotlin = "2.1.10"
 ksp = "2.1.10-1.0.31"
+dataStore = "1.1.6"
+okio = "3.11.0"
 androidx-room = "2.7.0"
 sqlite = "2.5.0"
 ktor = "3.1.2"
@@ -43,6 +45,11 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "androidx-room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
+#DataStore
+androidx-datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "dataStore" }
+androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "dataStore" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
+
 # Ktor Client
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
@@ -51,6 +58,8 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+
+
 
 
 [plugins]
