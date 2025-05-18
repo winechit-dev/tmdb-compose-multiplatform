@@ -78,6 +78,9 @@ kotlin {
             // Koin
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
+
+            // Kotlinx datetime
+            implementation(libs.kotlinx.datetime)
         }
 
         iosMain.dependencies {
