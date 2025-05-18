@@ -43,10 +43,17 @@ object HttpClientFactory {
 
             // Configure default request
             defaultRequest {
+                // ToDo: Need to improve token management
+                val tk =
+                    "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0MzE2ODRmMmY1N2I0YTNmMGQ1MjBhZmFlMGVlNmE0ZiIsIm5iZiI6MTcyOTA2NTcwMS41OTM4MDcsInN1YiI6IjVkYzI1Njg3OWQ4OTM5MDAxODMzMTExZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.lm5zq9fpr96S6Te7e4nuTaOxtBjlShc2Z_3VYtPmy3U".prefixBearer()
                 url("https://api.themoviedb.org/3/") // ToDo: Need to improve this
                 headers {
-                    append("Accept", "application/json")
+                    append("Content-Type", "application/json-patch+json")
+                    append("Authorization", tk)
+                    append("Accept", "text/plain")
                 }
             }
         }
 }
+
+private fun String.prefixBearer() = "Bearer $this"
