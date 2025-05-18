@@ -12,8 +12,8 @@ import kotlinx.coroutines.IO
 
 @Database(entities = [FavoriteEntity::class], version = 1)
 @ConstructedBy(AppDatabaseConstructor::class)
-abstract class AppDatabase : RoomDatabase(){
-    abstract fun favoriteDao() : FavoriteDao
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun favoriteDao(): FavoriteDao
 }
 
 // The Room compiler generates the `actual` implementations.
@@ -22,14 +22,11 @@ expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
     override fun initialize(): AppDatabase
 }
 
-fun getRoomDatabase(
-    builder: RoomDatabase.Builder<AppDatabase>
-): AppDatabase {
-    return builder
-        //.addMigrations(MIGRATIONS)
+fun getRoomDatabase(builder: RoomDatabase.Builder<AppDatabase>): AppDatabase =
+    builder
+        // .addMigrations(MIGRATIONS)
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
-}
 
-internal const val dbFileName = "tmdb-cmp.db"
+internal const val DB_FILE_NAME = "tmdb-cmp.db"
