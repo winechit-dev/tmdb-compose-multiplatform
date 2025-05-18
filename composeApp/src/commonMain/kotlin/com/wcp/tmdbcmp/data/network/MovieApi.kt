@@ -16,7 +16,8 @@ class MovieApi(
     companion object {
         private const val STARTING_PAGE_INDEX = 1
         private const val LANGUAGE = "en-US"
-        const val API_KEY: String = "431684f2f57b4a3f0d520afae0ee6a4f" // Replace with your actual API key
+        const val API_KEY: String =
+            "431684f2f57b4a3f0d520afae0ee6a4f" // Replace with your actual API key
     }
 
     suspend fun getTrendingTodayMovies(
@@ -107,9 +108,9 @@ class MovieApi(
                 parameter("language", language)
             }.body()
 
-    suspend fun getCreditDetails(
+    suspend fun getCast(
         movieId: Int,
-        apiKey: String,
+        apiKey: String = API_KEY,
     ): CreditsResponse =
         httpClient
             .get {
