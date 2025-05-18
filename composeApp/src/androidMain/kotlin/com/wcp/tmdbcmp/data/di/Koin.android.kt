@@ -8,12 +8,13 @@ import com.wcp.tmdbcmp.data.getDatabaseBuilder
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-actual fun platformModule(): Module = module {
-    single<PreferencesDataSource> {
-        createDataStore(get())
-    }
+actual fun platformModule(): Module =
+    module {
+        single<PreferencesDataSource> {
+            createDataStore(get())
+        }
 
-    single<RoomDatabase.Builder<AppDatabase>> {
-        getDatabaseBuilder(get())
+        single<RoomDatabase.Builder<AppDatabase>> {
+            getDatabaseBuilder(get())
+        }
     }
-}
