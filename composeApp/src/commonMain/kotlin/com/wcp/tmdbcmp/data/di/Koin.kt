@@ -10,6 +10,7 @@ import com.wcp.tmdbcmp.presentation.discover.ui.DiscoverViewModel
 import com.wcp.tmdbcmp.presentation.discover.ui.details.MovieDetailsViewModel
 import com.wcp.tmdbcmp.presentation.favorites.FavoritesViewModel
 import com.wcp.tmdbcmp.presentation.search.SearchViewModel
+import com.wcp.tmdbcmp.presentation.settings.SettingsViewModel
 import io.ktor.client.HttpClient
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -42,6 +43,7 @@ val viewModelModule =
         factoryOf(::DiscoverViewModel)
         factoryOf(::FavoritesViewModel)
         factoryOf(::SearchViewModel)
+        factoryOf(::SettingsViewModel)
     }
 
 fun initKoin(config: KoinAppDeclaration? = null) {
