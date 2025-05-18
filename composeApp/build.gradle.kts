@@ -81,6 +81,10 @@ kotlin {
 
             // Kotlinx datetime
             implementation(libs.kotlinx.datetime)
+
+            // Coil Image loading
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.okhttp)
         }
 
         iosMain.dependencies {

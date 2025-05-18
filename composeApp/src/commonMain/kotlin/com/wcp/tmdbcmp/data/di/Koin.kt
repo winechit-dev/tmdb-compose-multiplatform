@@ -6,9 +6,12 @@ import com.wcp.tmdbcmp.data.network.HttpClientFactory
 import com.wcp.tmdbcmp.data.network.MovieApi
 import com.wcp.tmdbcmp.data.repository.MovieRepositoryImpl
 import com.wcp.tmdbcmp.domain.repository.MovieRepository
+import com.wcp.tmdbcmp.presentation.discover.ui.DiscoverViewModel
+import com.wcp.tmdbcmp.presentation.discover.ui.details.MovieDetailsViewModel
 import io.ktor.client.HttpClient
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
@@ -31,11 +34,18 @@ val databaseModule =
         single<AppDatabase> { getRoomDatabase(get()) }
     }
 
-fun initKoin (config : KoinAppDeclaration?= null){
+val viewModelModule =
+    module {
+        factoryOf(::MovieDetailsViewModel)
+        factoryOf(::DiscoverViewModel)
+    }
+
+fun initKoin(config: KoinAppDeclaration? = null) {
     startKoin {
         config?.invoke(this)
         modules(
             dataModule,
+            viewModelModule,
             platformModule(),
             databaseModule
         )
