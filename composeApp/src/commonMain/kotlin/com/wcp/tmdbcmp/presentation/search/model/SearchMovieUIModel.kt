@@ -6,5 +6,5 @@ data class SearchMovieUIModel(
     val posterPath: String,
     val genres: List<String>,
     val overview: String,
-    val releaseDate: String
+    val releaseDate: String,
 )

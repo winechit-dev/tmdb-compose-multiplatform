@@ -21,21 +21,22 @@ import kotlinx.coroutines.launch
 
 class MovieDetailsViewModel(
     private val repository: MovieRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val id = savedStateHandle.get<Int>("id")!!
 
     private val _uiState = MutableStateFlow(MovieDetailsUIState())
-    val uiState: StateFlow<MovieDetailsUIState> = combine(
-        _uiState,
-        repository.isFavorite(id)
-    ) { state, favorite ->
-        state.copy(favorite = favorite)
-    }.stateIn(
-        scope = viewModelScope,
-        initialValue = MovieDetailsUIState(),
-        started = SharingStarted.WhileSubscribed(5000L)
-    )
+    val uiState: StateFlow<MovieDetailsUIState> =
+        combine(
+            _uiState,
+            repository.isFavorite(id),
+        ) { state, favorite ->
+            state.copy(favorite = favorite)
+        }.stateIn(
+            scope = viewModelScope,
+            initialValue = MovieDetailsUIState(),
+            started = SharingStarted.WhileSubscribed(5000L),
+        )
 
     init {
         getDetails()
@@ -50,7 +51,7 @@ class MovieDetailsViewModel(
                         state.copy(
                             loading = false,
                             details = details,
-                            recommendations = details.recommendations.toMoviesUIModel()
+                            recommendations = details.recommendations.toMoviesUIModel(),
                         )
                     }
                 }.onFailure { error ->
@@ -63,16 +64,17 @@ class MovieDetailsViewModel(
     fun onToggleFavorite() {
         viewModelScope.launch(Dispatchers.IO) {
             val details = uiState.value.details ?: return@launch
-            repository.toggleFavorite(
-                FavoriteMovieModel(
-                    movieId = details.id,
-                    name = details.originalTitle,
-                    posterPath = details.posterPath,
-                    favorite = uiState.value.favorite
-                )
-            ).onFailure { error ->
-                UserMessageManager.showMessage(error.message.toString())
-            }
+            repository
+                .toggleFavorite(
+                    FavoriteMovieModel(
+                        movieId = details.id,
+                        name = details.originalTitle,
+                        posterPath = details.posterPath,
+                        favorite = uiState.value.favorite,
+                    ),
+                ).onFailure { error ->
+                    UserMessageManager.showMessage(error.message.toString())
+                }
         }
     }
 }
@@ -81,5 +83,5 @@ data class MovieDetailsUIState(
     val loading: Boolean = true,
     val favorite: Boolean = false,
     val details: MovieDetailsModel? = null,
-    val recommendations: List<MovieUIModel> = emptyList()
+    val recommendations: List<MovieUIModel> = emptyList(),
 )

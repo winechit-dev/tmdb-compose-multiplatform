@@ -15,10 +15,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class DiscoverViewModel (
-    private val repository: MovieRepository
+class DiscoverViewModel(
+    private val repository: MovieRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(DiscoverUIState())
     val uiState: StateFlow<DiscoverUIState> = _uiState.asStateFlow()
 
@@ -35,7 +34,6 @@ class DiscoverViewModel (
         getNowPlayingMovies()
     }
 
-
     private fun getGenres() {
         viewModelScope.launch(Dispatchers.IO) {
             repository
@@ -43,20 +41,23 @@ class DiscoverViewModel (
                 .onFailure { UserMessageManager.showMessage(it.message.toString()) }
                 .onSuccess {
                     _uiState.update { state ->
-                        val default = listOf(
-                            GenreUIModel(
-                                id = 100,
-                                name = "All",
-                                selected = true
+                        val default =
+                            listOf(
+                                GenreUIModel(
+                                    id = 100,
+                                    name = "All",
+                                    selected = true,
+                                ),
                             )
-                        )
-                        val genres = default + it.genres.map { genre ->
-                            GenreUIModel(
-                                id = genre.id,
-                                name = genre.name,
-                                selected = state.selectedGenreId == genre.id
-                            )
-                        }
+                        val genres =
+                            default +
+                                it.genres.map { genre ->
+                                    GenreUIModel(
+                                        id = genre.id,
+                                        name = genre.name,
+                                        selected = state.selectedGenreId == genre.id,
+                                    )
+                                }
                         state.copy(genres = genres)
                     }
                 }
@@ -72,9 +73,10 @@ class DiscoverViewModel (
 
                     _uiState.update { state ->
                         state.copy(
-                            trendingTodayMovies = movies
-                                .results
-                                .toMoviesUIModel(state.selectedGenreId)
+                            trendingTodayMovies =
+                                movies
+                                    .results
+                                    .toMoviesUIModel(state.selectedGenreId),
                         )
                     }
                 }
@@ -89,9 +91,10 @@ class DiscoverViewModel (
                 .onSuccess { movies ->
                     _uiState.update { state ->
                         state.copy(
-                            popularMovies = movies
-                                .results
-                                .toMoviesUIModel(state.selectedGenreId)
+                            popularMovies =
+                                movies
+                                    .results
+                                    .toMoviesUIModel(state.selectedGenreId),
                         )
                     }
                 }
@@ -106,9 +109,10 @@ class DiscoverViewModel (
                 .onSuccess { movies ->
                     _uiState.update { state ->
                         state.copy(
-                            upcomingMovies = movies
-                                .results
-                                .toMoviesUIModel(state.selectedGenreId)
+                            upcomingMovies =
+                                movies
+                                    .results
+                                    .toMoviesUIModel(state.selectedGenreId),
                         )
                     }
                 }
@@ -123,9 +127,10 @@ class DiscoverViewModel (
                 .onSuccess { movies ->
                     _uiState.update { state ->
                         state.copy(
-                            topRatedMovies = movies
-                                .results
-                                .toMoviesUIModel(state.selectedGenreId)
+                            topRatedMovies =
+                                movies
+                                    .results
+                                    .toMoviesUIModel(state.selectedGenreId),
                         )
                     }
                 }
@@ -140,9 +145,10 @@ class DiscoverViewModel (
                 .onSuccess { movies ->
                     _uiState.update { state ->
                         state.copy(
-                            nowPlayingMovies = movies
-                                .results
-                                .toMoviesUIModel(state.selectedGenreId)
+                            nowPlayingMovies =
+                                movies
+                                    .results
+                                    .toMoviesUIModel(state.selectedGenreId),
                         )
                     }
                 }
@@ -153,7 +159,7 @@ class DiscoverViewModel (
         _uiState.update { state ->
             state.copy(
                 selectedGenreId = genreId,
-                genres = state.genres.map { it.copy(selected = it.id == genreId) }
+                genres = state.genres.map { it.copy(selected = it.id == genreId) },
             )
         }
         fetchAll()
@@ -167,5 +173,5 @@ data class DiscoverUIState(
     val popularMovies: List<MovieUIModel>? = null,
     val upcomingMovies: List<MovieUIModel>? = null,
     val nowPlayingMovies: List<MovieUIModel>? = null,
-    val topRatedMovies: List<MovieUIModel>? = null
+    val topRatedMovies: List<MovieUIModel>? = null,
 )

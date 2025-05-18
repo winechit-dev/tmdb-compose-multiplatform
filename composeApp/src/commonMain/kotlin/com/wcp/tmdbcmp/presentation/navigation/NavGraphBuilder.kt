@@ -20,10 +20,7 @@ import com.wcp.tmdbcmp.presentation.search.SearchScreen
 import com.wcp.tmdbcmp.presentation.settings.Settings
 import com.wcp.tmdbcmp.presentation.settings.SettingsScreen
 
-fun NavGraphBuilder.navGraphBuilder(
-    navController: NavController
-) {
-
+fun NavGraphBuilder.navGraphBuilder(navController: NavController) {
     navDiscover(navController)
     navFavorites(navController)
     navSearch(navController)
@@ -34,9 +31,9 @@ fun NavGraphBuilder.navGraphBuilder(
 fun NavGraphBuilder.navDiscover(navController: NavController) {
     composable<Discover> {
         CompositionLocalProvider(
-            LocalNavAnimatedVisibilityScope provides this@composable
+            LocalNavAnimatedVisibilityScope provides this@composable,
         ) {
-            DiscoverScreen (
+            DiscoverScreen(
                 onEvent = { event ->
                     when (event) {
                         is DiscoverEvent.MovieDetails -> {
@@ -45,8 +42,8 @@ fun NavGraphBuilder.navDiscover(navController: NavController) {
                                     id = event.model.id,
                                     name = event.model.name,
                                     posterPath = event.model.posterPath,
-                                    type = event.type
-                                )
+                                    type = event.type,
+                                ),
                             )
                         }
 
@@ -56,20 +53,16 @@ fun NavGraphBuilder.navDiscover(navController: NavController) {
 
                         else -> Unit
                     }
-
-                }
+                },
             )
         }
-
     }
 }
 
-fun NavGraphBuilder.navFavorites(
-    navController: NavController
-) {
+fun NavGraphBuilder.navFavorites(navController: NavController) {
     composable<Favorites> {
         CompositionLocalProvider(
-            LocalNavAnimatedVisibilityScope provides this@composable
+            LocalNavAnimatedVisibilityScope provides this@composable,
         ) {
             FavoritesScreen(
                 onNavigateMovieDetails = { model, type ->
@@ -78,21 +71,19 @@ fun NavGraphBuilder.navFavorites(
                             id = model.movieId,
                             name = model.name,
                             posterPath = model.posterPath,
-                            type = type
-                        )
+                            type = type,
+                        ),
                     )
-                }
+                },
             )
         }
     }
 }
 
-fun NavGraphBuilder.navSearch(
-    navController: NavController
-) {
+fun NavGraphBuilder.navSearch(navController: NavController) {
     composable<Search> {
         CompositionLocalProvider(
-            LocalNavAnimatedVisibilityScope provides this@composable
+            LocalNavAnimatedVisibilityScope provides this@composable,
         ) {
             SearchScreen(
                 onEvent = { event ->
@@ -103,8 +94,8 @@ fun NavGraphBuilder.navSearch(
                                     id = event.model.id,
                                     name = event.model.name,
                                     posterPath = event.model.posterPath,
-                                    type = ""
-                                )
+                                    type = "",
+                                ),
                             )
                         }
 
@@ -114,7 +105,7 @@ fun NavGraphBuilder.navSearch(
 
                         else -> Unit
                     }
-                }
+                },
             )
         }
     }
@@ -124,7 +115,7 @@ fun NavGraphBuilder.navMovieDetails(navController: NavController) {
     composable<MovieDetails> {
         val args = it.toRoute<MovieDetails>()
         CompositionLocalProvider(
-            LocalNavAnimatedVisibilityScope provides this@composable
+            LocalNavAnimatedVisibilityScope provides this@composable,
         ) {
             MovieDetailsScreen(
                 args = args,
@@ -140,14 +131,14 @@ fun NavGraphBuilder.navMovieDetails(navController: NavController) {
                                     id = event.model.id,
                                     name = event.model.name,
                                     posterPath = event.model.posterPath,
-                                    type = event.type
-                                )
+                                    type = event.type,
+                                ),
                             )
                         }
 
                         else -> Unit
                     }
-                }
+                },
             )
         }
     }
@@ -158,7 +149,3 @@ fun NavGraphBuilder.navSettings() {
         SettingsScreen()
     }
 }
-
-
-
-

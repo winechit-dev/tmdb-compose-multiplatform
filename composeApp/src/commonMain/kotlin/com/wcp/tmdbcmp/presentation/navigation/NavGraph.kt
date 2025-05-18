@@ -38,17 +38,16 @@ fun NavGraph(
     navController: NavHostController,
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-
 
     val showBottomNav by remember(backStackEntry) {
         derivedStateOf {
             backStackEntry.hasAnyRoute(
                 Discover::class,
                 Favorites::class,
-                Settings::class
+                Settings::class,
             )
         }
     }
@@ -56,33 +55,32 @@ fun NavGraph(
     val offsetY by animateDpAsState(
         label = "",
         targetValue = if (showBottomNav) 0.dp else 150.dp,
-        animationSpec = tween(durationMillis = 300)
+        animationSpec = tween(durationMillis = 300),
     )
 
     MovieQuestTheme(
         darkTheme = darkTheme,
-        dynamicColor = dynamicColor
-    ){
+        dynamicColor = dynamicColor,
+    ) {
         Scaffold(
             bottomBar = {
                 DefaultBottomNavigation(
                     navController = navController,
-                    modifier = Modifier.offset { IntOffset(0, offsetY.roundToPx()) })
+                    modifier = Modifier.offset { IntOffset(0, offsetY.roundToPx()) },
+                )
             },
         ) { padding ->
             SharedTransitionLayout {
                 CompositionLocalProvider(
                     LocalEntryPadding provides padding,
-                    LocalSharedTransitionScope provides this@SharedTransitionLayout
+                    LocalSharedTransitionScope provides this@SharedTransitionLayout,
                 ) {
-
                     Box(
                         modifier = Modifier.fillMaxSize(),
                     ) {
-
                         NavHost(
                             navController = navController,
-                            startDestination = startDestination
+                            startDestination = startDestination,
                         ) {
                             navGraphBuilder(navController)
                         }
@@ -94,7 +92,4 @@ fun NavGraph(
     }
 }
 
-private fun NavBackStackEntry?.hasAnyRoute(vararg routes: KClass<*>): Boolean {
-    return routes.any { this?.destination?.hasRoute(it) == true }
-}
-
+private fun NavBackStackEntry?.hasAnyRoute(vararg routes: KClass<*>): Boolean = routes.any { this?.destination?.hasRoute(it) == true }

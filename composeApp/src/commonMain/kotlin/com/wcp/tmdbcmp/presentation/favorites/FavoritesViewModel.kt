@@ -13,16 +13,16 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
-    private val repository: MovieRepository
+    private val repository: MovieRepository,
 ) : ViewModel() {
-
-    val favorites: StateFlow<List<FavoriteMovieModel>> = repository
-        .getAllFavorites()
-        .stateIn(
-            scope = viewModelScope,
-            initialValue = emptyList(),
-            started = SharingStarted.WhileSubscribed(5000L)
-        )
+    val favorites: StateFlow<List<FavoriteMovieModel>> =
+        repository
+            .getAllFavorites()
+            .stateIn(
+                scope = viewModelScope,
+                initialValue = emptyList(),
+                started = SharingStarted.WhileSubscribed(5000L),
+            )
 
     fun onToggleFavorite(model: FavoriteMovieModel) {
         viewModelScope.launch(Dispatchers.IO) {

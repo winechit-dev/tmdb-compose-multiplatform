@@ -18,7 +18,7 @@ kotlin = "2.1.10"
 kotlinxDatetime = "0.6.2"
 ksp = "2.1.10-1.0.31"
 dataStore = "1.1.6"
-navigationCompose = "2.9.0-beta01"
+navigationCompose = "2.8.0-alpha13"
 okio = "3.11.0"
 androidx-room = "2.7.0"
 sqlite = "2.5.0"
@@ -81,7 +81,7 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 
 #Coil Image
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
-coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilCompose" }
 
 
 [plugins]

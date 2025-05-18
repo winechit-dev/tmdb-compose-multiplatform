@@ -53,16 +53,14 @@ import tmdb_compose_multiplatform.composeapp.generated.resources.ic_favorite_on
 data object Favorites
 
 @Composable
-fun FavoritesScreen(
-    onNavigateMovieDetails: (model: FavoriteMovieModel, type: String) -> Unit
-) {
+fun FavoritesScreen(onNavigateMovieDetails: (model: FavoriteMovieModel, type: String) -> Unit) {
     val viewModel: FavoritesViewModel = koinViewModel()
     val favorites by viewModel.favorites.collectAsState()
 
     FavoritesContent(
         favorites = favorites,
         onFavoriteToggle = viewModel::onToggleFavorite,
-        onNavigateMovieDetails = onNavigateMovieDetails
+        onNavigateMovieDetails = onNavigateMovieDetails,
     )
 }
 
@@ -71,7 +69,7 @@ internal fun FavoritesContent(
     modifier: Modifier = Modifier,
     favorites: List<FavoriteMovieModel>,
     onFavoriteToggle: (FavoriteMovieModel) -> Unit = {},
-    onNavigateMovieDetails: (model: FavoriteMovieModel, type: String) -> Unit = { _, _ -> }
+    onNavigateMovieDetails: (model: FavoriteMovieModel, type: String) -> Unit = { _, _ -> },
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -80,12 +78,13 @@ internal fun FavoritesContent(
                 text = "Favorites",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .padding(top = 20.dp)
-                    .padding(horizontal = 20.dp)
+                modifier =
+                    Modifier
+                        .statusBarsPadding()
+                        .padding(top = 20.dp)
+                        .padding(horizontal = 20.dp),
             )
-        }
+        },
     ) { innerPadding ->
         val top = innerPadding.calculateTopPadding() + 20.dp
         val bottom =
@@ -96,30 +95,31 @@ internal fun FavoritesContent(
             contentPadding = PaddingValues(bottom = bottom),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = top)
-                .padding(horizontal = 20.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(top = top)
+                    .padding(horizontal = 20.dp),
         ) {
             items(
                 items = favorites,
                 key = { it.movieId },
-                contentType = { "" }
+                contentType = { "" },
             ) { model ->
                 FavoriteMovieItem(
                     model = model,
                     onFavoriteToggle = onFavoriteToggle,
-                    onNavigateMovieDetails = onNavigateMovieDetails
+                    onNavigateMovieDetails = onNavigateMovieDetails,
                 )
             }
         }
         if (favorites.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "No Favorites!"
+                    text = "No Favorites!",
                 )
             }
         }
@@ -131,43 +131,49 @@ private fun FavoriteMovieItem(
     modifier: Modifier = Modifier,
     model: FavoriteMovieModel,
     onFavoriteToggle: (FavoriteMovieModel) -> Unit,
-    onNavigateMovieDetails: (model: FavoriteMovieModel, type: String) -> Unit
+    onNavigateMovieDetails: (model: FavoriteMovieModel, type: String) -> Unit,
 ) {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No Scope found")
-    val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No Scope found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No Scope found")
+    val animatedVisibilityScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No Scope found")
     val hapticFeedback = LocalHapticFeedback.current
 
     with(sharedTransitionScope) {
         Card(
-            modifier = modifier
-                .fillMaxWidth()
-                .aspectRatio(124f / 188f)
-                .sharedBounds(
-                    sharedContentState = rememberSharedContentState(
-                        key = AppSharedElementKey(
-                            id = model.movieId.toString() + AppSharedElementType.Favorite,
-                            type = AppSharedElementType.Bounds
-                        )
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .aspectRatio(124f / 188f)
+                    .sharedBounds(
+                        sharedContentState =
+                            rememberSharedContentState(
+                                key =
+                                    AppSharedElementKey(
+                                        id = model.movieId.toString() + AppSharedElementType.Favorite,
+                                        type = AppSharedElementType.Bounds,
+                                    ),
+                            ),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = detailBoundsTransform,
+                        enter = fadeIn(),
+                        exit = fadeOut(),
                     ),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    boundsTransform = detailBoundsTransform,
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                ),
-            onClick = { onNavigateMovieDetails(model, AppSharedElementType.Favorite.toString()) }
+            onClick = { onNavigateMovieDetails(model, AppSharedElementType.Favorite.toString()) },
         ) {
             Box(
-                contentAlignment = Alignment.TopEnd
+                contentAlignment = Alignment.TopEnd,
             ) {
                 AsyncImage(
                     model = model.posterPath,
                     contentDescription = "poster",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(MaterialTheme.shapes.medium)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .clip(MaterialTheme.shapes.medium),
                 )
                 AppIconButton(
                     icon = if (model.favorite) Res.drawable.ic_favorite_on else Res.drawable.ic_favorite_off,
@@ -175,30 +181,30 @@ private fun FavoriteMovieItem(
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                         onFavoriteToggle(model)
                     },
-                    modifier = Modifier
-                        .bounceClick()
-                        .padding(8.dp)
+                    modifier =
+                        Modifier
+                            .bounceClick()
+                            .padding(8.dp),
                 )
             }
         }
     }
-
 }
-
 
 @ThemePreviews
 @Composable
 internal fun FavoritesContentPreview() {
     AppPreviewWithSharedTransitionLayout {
         FavoritesContent(
-            favorites = (1..8).toList().map {
-                FavoriteMovieModel(
-                    movieId = it,
-                    name = "FavoriteMovie $it",
-                    posterPath = "",
-                    favorite = it == 1
-                )
-            }
+            favorites =
+                (1..8).toList().map {
+                    FavoriteMovieModel(
+                        movieId = it,
+                        name = "FavoriteMovie $it",
+                        posterPath = "",
+                        favorite = it == 1,
+                    )
+                },
         )
     }
 }

@@ -35,43 +35,42 @@ import kotlin.reflect.KClass
 enum class DefaultBottomBarNavigationItem(
     val route: Any,
     val label: String,
-    val icon: DrawableResource
+    val icon: DrawableResource,
 ) {
     DiscoverItem(
         Discover,
         "Discover",
-        Res.drawable.ic_discover
+        Res.drawable.ic_discover,
     ),
 
     FavoritesItem(
         Favorites,
         "Favorites",
-        Res.drawable.ic_favorite_off
+        Res.drawable.ic_favorite_off,
     ),
     SettingsItem(
         Settings,
         "Settings",
-        Res.drawable.ic_settings
-    )
+        Res.drawable.ic_settings,
+    ),
 }
 
-private fun NavBackStackEntry?.isRouteSelected(route: KClass<*>): Boolean {
-    return this?.destination?.hasRoute(route) == true
-}
+private fun NavBackStackEntry?.isRouteSelected(route: KClass<*>): Boolean = this?.destination?.hasRoute(route) == true
 
 @Composable
 fun DefaultBottomNavigation(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
 ) {
-    val bottomBarPadding = WindowInsets.navigationBars
-        .asPaddingValues(LocalDensity.current)
-        .calculateBottomPadding()
+    val bottomBarPadding =
+        WindowInsets.navigationBars
+            .asPaddingValues(LocalDensity.current)
+            .calculateBottomPadding()
 
     NavigationBar(
         modifier = modifier,
         windowInsets = WindowInsets(bottom = bottomBarPadding),
-        containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = SurfaceContainerAlpha)
+        containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = SurfaceContainerAlpha),
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
 
@@ -91,14 +90,14 @@ fun DefaultBottomNavigation(
                     icon = {
                         Icon(
                             painter = painterResource(item.icon),
-                            contentDescription = item.name
+                            contentDescription = item.name,
                         )
                     },
                     label = {
                         Text(
-                            text = item.label
+                            text = item.label,
                         )
-                    }
+                    },
                 )
             }
     }
@@ -109,7 +108,7 @@ fun DefaultBottomNavigation(
 private fun BottomNavigationPreview() {
     AppPreviewWrapper {
         DefaultBottomNavigation(
-            navController = rememberNavController()
+            navController = rememberNavController(),
         )
     }
 }

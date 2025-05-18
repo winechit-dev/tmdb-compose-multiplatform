@@ -45,44 +45,50 @@ fun AppButton(
     text: String,
     leadingIcon: DrawableResource? = null,
     textStyle: TextStyle = MaterialTheme.typography.defaultButton,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
-
-    val disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f).asBrush()
-    val containerColor = Brush.horizontalGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.secondary,
-            MaterialTheme.colorScheme.primary
+    val disabledContainerColor =
+        MaterialTheme.colorScheme.onSurface
+            .copy(alpha = 0.12f)
+            .asBrush()
+    val containerColor =
+        Brush.horizontalGradient(
+            colors =
+                listOf(
+                    MaterialTheme.colorScheme.secondary,
+                    MaterialTheme.colorScheme.primary,
+                ),
         )
-    )
-    val brush = remember(enabled) {
-        if (enabled) containerColor else disabledContainerColor
-    }
+    val brush =
+        remember(enabled) {
+            if (enabled) containerColor else disabledContainerColor
+        }
 
     Button(
         onClick = onClick,
-        modifier = modifier
-            .bounceClick()
-            .background(brush = brush, shape = CircleShape)
-            .defaultMinSize(minHeight = MinHeight),
+        modifier =
+            modifier
+                .bounceClick()
+                .background(brush = brush, shape = CircleShape)
+                .defaultMinSize(minHeight = MinHeight),
         enabled = enabled,
         shape = CircleShape,
         colors = defaultButtonColors(),
         content = {
             ProvideTextStyle(value = textStyle) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     if (leadingIcon != null) {
                         Icon(
                             painter = painterResource(leadingIcon),
-                            contentDescription = "leadingIcon"
+                            contentDescription = "leadingIcon",
                         )
                     }
                     Text(text = text)
                 }
             }
-        }
+        },
     )
 }
 
@@ -92,53 +98,55 @@ fun AppIconButton(
     icon: DrawableResource,
     enabled: Boolean = true,
     containerColor: Color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     IconButton(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier
-            .bounceClick()
-            .clip(CircleShape)
-            .background(containerColor)
+        modifier =
+            modifier
+                .bounceClick()
+                .clip(CircleShape)
+                .background(containerColor),
     ) {
         Icon(
             painter = painterResource(icon),
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }
 
 @Composable
-fun defaultButtonColors(): ButtonColors = ButtonDefaults.buttonColors(
-    containerColor = Color.Transparent,
-    disabledContainerColor = Color.Transparent
-)
+fun defaultButtonColors(): ButtonColors =
+    ButtonDefaults.buttonColors(
+        containerColor = Color.Transparent,
+        disabledContainerColor = Color.Transparent,
+    )
 
 class ButtonPreviewParameterProvider : PreviewParameterProvider<Boolean> {
     override val values: Sequence<Boolean>
-        get() = sequenceOf(
-            true,
-            false
-        )
-
+        get() =
+            sequenceOf(
+                true,
+                false,
+            )
 }
 
 @ThemePreviews
 @Composable
 private fun ButtonPreview(
-    @PreviewParameter(ButtonPreviewParameterProvider::class) enabled: Boolean
+    @PreviewParameter(ButtonPreviewParameterProvider::class) enabled: Boolean,
 ) {
     AppPreviewWrapper {
         Column(
             verticalArrangement = Arrangement.spacedBy(30.dp),
-            modifier = Modifier.padding(30.dp)
+            modifier = Modifier.padding(30.dp),
         ) {
             AppButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = enabled,
                 text = "Click Here",
-                onClick = {}
+                onClick = {},
             )
         }
     }
@@ -147,19 +155,19 @@ private fun ButtonPreview(
 @ThemePreviews
 @Composable
 private fun ButtonWithLeadingIconPreview(
-    @PreviewParameter(ButtonPreviewParameterProvider::class) enabled: Boolean
+    @PreviewParameter(ButtonPreviewParameterProvider::class) enabled: Boolean,
 ) {
     AppPreviewWrapper {
         Column(
             verticalArrangement = Arrangement.spacedBy(30.dp),
-            modifier = Modifier.padding(30.dp)
+            modifier = Modifier.padding(30.dp),
         ) {
             AppButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = enabled,
                 text = "Click Here",
                 leadingIcon = Res.drawable.ic_play,
-                onClick = {}
+                onClick = {},
             )
         }
     }

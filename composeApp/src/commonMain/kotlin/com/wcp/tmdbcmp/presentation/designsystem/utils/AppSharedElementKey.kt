@@ -8,28 +8,28 @@ import androidx.compose.animation.core.spring
 
 data class AppSharedElementKey(
     val id: String,
-    val type: AppSharedElementType
+    val type: AppSharedElementType,
 )
 
 enum class AppSharedElementType {
     Bounds,
     Favorite,
-    SearchBar
-
+    SearchBar,
 }
 
+val detailBoundsTransform =
+    BoundsTransform { _, _ ->
+        spatialExpressiveSpring()
+    }
 
-val detailBoundsTransform = BoundsTransform { _, _ ->
-    spatialExpressiveSpring()
-}
+fun <T> spatialExpressiveSpring() =
+    spring<T>(
+        dampingRatio = 0.8f,
+        stiffness = 380f,
+    )
 
-fun <T> spatialExpressiveSpring() = spring<T>(
-    dampingRatio = 0.8f,
-    stiffness = 380f
-)
-
-fun <T> nonSpatialExpressiveSpring() = spring<T>(
-    dampingRatio = 1f,
-    stiffness = 1600f
-)
-
+fun <T> nonSpatialExpressiveSpring() =
+    spring<T>(
+        dampingRatio = 1f,
+        stiffness = 1600f,
+    )

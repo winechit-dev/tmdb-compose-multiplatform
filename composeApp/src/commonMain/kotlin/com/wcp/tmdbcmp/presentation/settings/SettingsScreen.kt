@@ -45,44 +45,45 @@ fun SettingsScreen() {
 
     SettingsContent(
         settings = settings,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
     )
 }
 
 @Composable
 internal fun SettingsContent(
     settings: SettingsDataModel,
-    onEvent: (SettingsEvent) -> Unit
+    onEvent: (SettingsEvent) -> Unit,
 ) {
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(LocalEntryPadding.current)
-            .padding(top = 20.dp),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(LocalEntryPadding.current)
+                .padding(top = 20.dp),
         topBar = {
             Text(
                 text = "Settings",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 20.dp)
+                modifier = Modifier.padding(horizontal = 20.dp),
             )
-        }
+        },
     ) { innerPadding ->
         Column(
             verticalArrangement = Arrangement.spacedBy(20.dp),
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(top = 20.dp)
-                .padding(horizontal = 20.dp)
-                .verticalScroll(rememberScrollState())
+            modifier =
+                Modifier
+                    .padding(innerPadding)
+                    .padding(top = 20.dp)
+                    .padding(horizontal = 20.dp)
+                    .verticalScroll(rememberScrollState()),
         ) {
-
             AnimatedVisibility(visible = settings.themeBrand == ThemeBrand.DEFAULT) {
                 Column {
                     Text(
                         text = "Use Dynamic Color",
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(bottom = 10.dp)
+                        modifier = Modifier.padding(bottom = 10.dp),
                     )
                     Card {
                         Column(Modifier.selectableGroup()) {
@@ -104,7 +105,7 @@ internal fun SettingsContent(
                 Text(
                     text = "Theme preference",
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 10.dp)
+                    modifier = Modifier.padding(bottom = 10.dp),
                 )
                 Card {
                     Column(Modifier.selectableGroup()) {
@@ -143,8 +144,7 @@ fun SettingsThemeChooserRow(
                 selected = selected,
                 role = Role.RadioButton,
                 onClick = onClick,
-            )
-            .padding(12.dp),
+            ).padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         RadioButton(
@@ -161,12 +161,13 @@ fun SettingsThemeChooserRow(
 internal fun SettingsContentPreview() {
     AppPreviewWrapper {
         SettingsContent(
-            settings = SettingsDataModel(
-                themeBrand = ThemeBrand.DEFAULT,
-                darkThemeConfig = DarkThemeConfig.FOLLOW_SYSTEM,
-                useDynamicColor = true
-            ),
-            onEvent = {}
+            settings =
+                SettingsDataModel(
+                    themeBrand = ThemeBrand.DEFAULT,
+                    darkThemeConfig = DarkThemeConfig.FOLLOW_SYSTEM,
+                    useDynamicColor = true,
+                ),
+            onEvent = {},
         )
     }
 }

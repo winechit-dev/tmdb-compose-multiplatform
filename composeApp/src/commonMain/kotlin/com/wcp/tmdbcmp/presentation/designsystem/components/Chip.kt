@@ -26,29 +26,30 @@ fun AppFilterChip(
     enabled: Boolean = true,
 ) {
     FilterChip(
-        modifier = modifier
-            .bounceClick(enabled = enabled)
-            .height(31.dp),
+        modifier =
+            modifier
+                .bounceClick(enabled = enabled)
+                .height(31.dp),
         selected = selected,
         shape = CircleShape,
-        colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = MaterialTheme.colorScheme.tertiary,
-            selectedLabelColor = MaterialTheme.colorScheme.onTertiary
-        ),
+        colors =
+            FilterChipDefaults.filterChipColors(
+                selectedContainerColor = MaterialTheme.colorScheme.tertiary,
+                selectedLabelColor = MaterialTheme.colorScheme.onTertiary,
+            ),
         enabled = enabled,
         onClick = onClick,
         label = {
             Text(text = label)
-        }
+        },
     )
 }
 
 @Composable
 fun AppChip(
     modifier: Modifier = Modifier,
-    label: String
+    label: String,
 ) {
-
     AssistChip(
         modifier = modifier,
         shape = CircleShape,
@@ -57,7 +58,7 @@ fun AppChip(
                 text = label,
             )
         },
-        onClick = {}
+        onClick = {},
     )
     /*Surface(
         modifier = modifier
@@ -76,29 +77,28 @@ fun AppChip(
             )
         }
     }*/
-
 }
 
 class ChipPreviewParameterProvider : PreviewParameterProvider<Boolean> {
     override val values: Sequence<Boolean>
-        get() = sequenceOf(
-            true,
-            false
-        )
-
+        get() =
+            sequenceOf(
+                true,
+                false,
+            )
 }
 
 @ThemePreviews
 @Composable
 private fun AppFilterChipPreview(
-    @PreviewParameter(ChipPreviewParameterProvider::class) selected: Boolean
+    @PreviewParameter(ChipPreviewParameterProvider::class) selected: Boolean,
 ) {
     AppPreviewWrapper {
         AppFilterChip(
             selected = selected,
             label = "Popular",
             onClick = {},
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         )
     }
 }
@@ -109,7 +109,7 @@ private fun AppChipPreview() {
     AppPreviewWrapper {
         AppChip(
             label = "Popular",
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         )
     }
 }

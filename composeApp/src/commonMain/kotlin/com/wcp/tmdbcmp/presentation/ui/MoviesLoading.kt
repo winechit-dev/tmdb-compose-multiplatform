@@ -12,12 +12,13 @@ fun LazyListScope.moviesLoading() {
     items(
         items = (1..3).toList(),
         key = { it },
-        contentType = { "loading" }
+        contentType = { "loading" },
     ) {
         Box(
-            modifier = Modifier
-                .widthIn(max = (ScreenConfig.getScreenWidth() / 3))
-                .aspectRatio(124f / 188f)
+            modifier =
+                Modifier
+                    .widthIn(max = (ScreenConfig.getScreenWidth() / 3))
+                    .aspectRatio(124f / 188f),
         )
     }
 }

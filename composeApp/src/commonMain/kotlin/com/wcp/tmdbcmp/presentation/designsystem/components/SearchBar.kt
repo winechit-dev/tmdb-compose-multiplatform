@@ -41,18 +41,20 @@ import tmdb_compose_multiplatform.composeapp.generated.resources.ic_search
 
 @Composable
 fun AppSearchBar(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     query: String,
     onQueryChanged: (String) -> Unit,
-    trailingIcon: @Composable (() -> Unit)? = null
+    trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No Scope found")
-    val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No Scope found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No Scope found")
+    val animatedVisibilityScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No Scope found")
 
     with(sharedTransitionScope) {
         CoreTextField(
@@ -61,41 +63,47 @@ fun AppSearchBar(
             placeholder = {
                 Text(text = "Search")
             },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Search,
-                keyboardType = KeyboardType.Text,
-                autoCorrectEnabled = true
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    focusManager.clearFocus()
-                }
-            ),
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            ),
+            keyboardOptions =
+                KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search,
+                    keyboardType = KeyboardType.Text,
+                    autoCorrectEnabled = true,
+                ),
+            keyboardActions =
+                KeyboardActions(
+                    onSearch = {
+                        focusManager.clearFocus()
+                    },
+                ),
+            colors =
+                TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                ),
             singleLine = true,
             trailingIcon = trailingIcon,
             shape = CircleShape,
             enabled = true,
             isError = false,
-            modifier = modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester)
-                .height(46.dp)
-                .sharedBounds(
-                    sharedContentState = rememberSharedContentState(
-                        key = AppSharedElementKey(
-                            id = "",
-                            type = AppSharedElementType.SearchBar
-                        )
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
+                    .height(46.dp)
+                    .sharedBounds(
+                        sharedContentState =
+                            rememberSharedContentState(
+                                key =
+                                    AppSharedElementKey(
+                                        id = "",
+                                        type = AppSharedElementType.SearchBar,
+                                    ),
+                            ),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = detailBoundsTransform,
+                        enter = fadeIn(),
+                        exit = fadeOut(),
                     ),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    boundsTransform = detailBoundsTransform,
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                )
         )
     }
 }
@@ -106,9 +114,10 @@ private fun AppSearchBarPreview() {
     var query by remember { mutableStateOf("") }
     AppPreviewWithSharedTransitionLayout {
         AppSearchBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
             query = query,
             onQueryChanged = { query = it },
             trailingIcon = {
@@ -116,7 +125,7 @@ private fun AppSearchBarPreview() {
                     painter = painterResource(Res.drawable.ic_search),
                     contentDescription = "ic_search",
                 )
-            }
+            },
         )
     }
 }

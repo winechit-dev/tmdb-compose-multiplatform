@@ -67,9 +67,7 @@ import tmdb_compose_multiplatform.composeapp.generated.resources.ic_search
 data object Search
 
 @Composable
-fun SearchScreen(
-    onEvent: (SearchEvent) -> Unit
-) {
+fun SearchScreen(onEvent: (SearchEvent) -> Unit) {
     val viewModel: SearchViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -87,7 +85,7 @@ fun SearchScreen(
 
                 else -> onEvent(event)
             }
-        }
+        },
     )
 }
 
@@ -95,7 +93,7 @@ fun SearchScreen(
 internal fun SearchContent(
     modifier: Modifier = Modifier,
     uiState: SearchUIState,
-    onEvent: (SearchEvent) -> Unit
+    onEvent: (SearchEvent) -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -113,16 +111,17 @@ internal fun SearchContent(
         topBar = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .padding(top = 20.dp)
+                modifier =
+                    Modifier
+                        .statusBarsPadding()
+                        .padding(top = 20.dp),
             ) {
                 AppIconButton(
                     icon = Res.drawable.ic_back,
                     onClick = {
                         keyboard?.hide()
                         onEvent(SearchEvent.NavigateUp)
-                    }
+                    },
                 )
                 AppSearchBar(
                     query = uiState.query,
@@ -135,47 +134,49 @@ internal fun SearchContent(
                                 onClick = {
                                     keyboard?.show()
                                     onEvent(SearchEvent.QueryChanged(""))
-                                }
+                                },
                             )
                         } else {
                             AppIconButton(
                                 icon = Res.drawable.ic_search,
                                 containerColor = Color.Transparent,
-                                onClick = {}
+                                onClick = {},
                             )
                         }
                     },
-                    modifier = Modifier
-                        .focusRequester(focusRequester)
-                        .fillMaxWidth()
-                        .padding(end = 20.dp)
+                    modifier =
+                        Modifier
+                            .focusRequester(focusRequester)
+                            .fillMaxWidth()
+                            .padding(end = 20.dp),
                 )
             }
-        }
+        },
     ) { innerPadding ->
         if (uiState.loading) {
             Loading(modifier = Modifier.padding(innerPadding))
             return@Scaffold
         }
         LazyColumn(
-            modifier = Modifier
-                .imePadding()
-                .padding(top = innerPadding.calculateTopPadding() + 10.dp)
-                .padding(horizontal = 20.dp),
+            modifier =
+                Modifier
+                    .imePadding()
+                    .padding(top = innerPadding.calculateTopPadding() + 10.dp)
+                    .padding(horizontal = 20.dp),
             contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding()),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             items(
                 items = uiState.movies.orEmpty(),
                 key = { it.id },
-                contentType = { "Search Item" }
+                contentType = { "Search Item" },
             ) { model ->
                 SearchItem(
                     model = model,
                     onEvent = {
                         focusManager.clearFocus()
                         onEvent(it)
-                    }
+                    },
                 )
             }
             item {
@@ -183,7 +184,7 @@ internal fun SearchContent(
                     Text(
                         text = uiState.userMessage,
                         modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -192,14 +193,13 @@ internal fun SearchContent(
 }
 
 @Composable
-private fun Loading(
-    modifier: Modifier = Modifier
-) {
+private fun Loading(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(20.dp),
-        contentAlignment = Alignment.TopCenter
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+        contentAlignment = Alignment.TopCenter,
     ) {
         CircularProgressIndicator()
     }
@@ -209,49 +209,55 @@ private fun Loading(
 private fun SearchItem(
     modifier: Modifier = Modifier,
     model: SearchMovieUIModel,
-    onEvent: (SearchEvent) -> Unit
+    onEvent: (SearchEvent) -> Unit,
 ) {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No Scope found")
-    val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No Scope found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No Scope found")
+    val animatedVisibilityScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No Scope found")
 
     with(sharedTransitionScope) {
         Card(
-            modifier = modifier
-                .bounceClick()
-                .sharedBounds(
-                    sharedContentState = rememberSharedContentState(
-                        key = AppSharedElementKey(
-                            id = model.id.toString(),
-                            type = AppSharedElementType.Bounds
-                        )
-                    ),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    boundsTransform = detailBoundsTransform,
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                )
-                .fillMaxWidth(),
-            onClick = { onEvent(SearchEvent.MovieDetails(model)) }
+            modifier =
+                modifier
+                    .bounceClick()
+                    .sharedBounds(
+                        sharedContentState =
+                            rememberSharedContentState(
+                                key =
+                                    AppSharedElementKey(
+                                        id = model.id.toString(),
+                                        type = AppSharedElementType.Bounds,
+                                    ),
+                            ),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = detailBoundsTransform,
+                        enter = fadeIn(),
+                        exit = fadeOut(),
+                    ).fillMaxWidth(),
+            onClick = { onEvent(SearchEvent.MovieDetails(model)) },
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(14.dp)
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 AsyncImage(
                     model = model.posterPath,
                     contentDescription = "poster",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .weight(0.8f)
-                        .size(124.dp, 200.dp)
-                        .clip(RoundedCornerShape(topStart = 12.0.dp, bottomStart = 12.0.dp))
+                    modifier =
+                        Modifier
+                            .weight(0.8f)
+                            .size(124.dp, 200.dp)
+                            .clip(RoundedCornerShape(topStart = 12.0.dp, bottomStart = 12.0.dp)),
                 )
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .padding(vertical = 10.dp)
-                        .weight(1.2f)
+                    modifier =
+                        Modifier
+                            .padding(vertical = 10.dp)
+                            .weight(1.2f),
                 ) {
                     Text(
                         text = model.name,
@@ -259,7 +265,7 @@ private fun SearchItem(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(end = 20.dp),
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
                     )
                     if (model.overview.isNotBlank()) {
                         Text(
@@ -267,21 +273,21 @@ private fun SearchItem(
                             style = MaterialTheme.typography.bodyMedium,
                             maxLines = 3,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(end = 20.dp)
+                            modifier = Modifier.padding(end = 20.dp),
                         )
                     }
 
                     if (model.releaseDate.isNotBlank()) {
                         Text(
                             text = model.releaseDate,
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
 
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         contentPadding = PaddingValues(end = 30.dp),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         items(
                             items = model.genres,
@@ -295,25 +301,26 @@ private fun SearchItem(
     }
 }
 
-
 @ThemePreviews
 @Composable
 internal fun SearchContentPreview() {
     AppPreviewWithSharedTransitionLayout {
         SearchContent(
-            uiState = SearchUIState(
-                movies = (1..8).toList().map {
-                    SearchMovieUIModel(
-                        id = it,
-                        name = "Movie $it",
-                        posterPath = "",
-                        genres = listOf("Genre1", "Genre2", "Genre3"),
-                        releaseDate = "12/12/1996",
-                        overview = "The director's cut version of the final three episodes of the Ohsama Sentai King-Ohger TV series, recut into one movie with 10 minutes of unreleased scenes added in."
-                    )
-                }
-            ),
-            onEvent = {}
+            uiState =
+                SearchUIState(
+                    movies =
+                        (1..8).toList().map {
+                            SearchMovieUIModel(
+                                id = it,
+                                name = "Movie $it",
+                                posterPath = "",
+                                genres = listOf("Genre1", "Genre2", "Genre3"),
+                                releaseDate = "12/12/1996",
+                                overview = "The director's cut version of the final three episodes of the Ohsama Sentai King-Ohger TV series, recut into one movie with 10 minutes of unreleased scenes added in.",
+                            )
+                        },
+                ),
+            onEvent = {},
         )
     }
 }

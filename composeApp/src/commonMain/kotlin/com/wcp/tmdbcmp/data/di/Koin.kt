@@ -5,7 +5,10 @@ import com.wcp.tmdbcmp.data.database.getRoomDatabase
 import com.wcp.tmdbcmp.data.network.HttpClientFactory
 import com.wcp.tmdbcmp.data.network.MovieApi
 import com.wcp.tmdbcmp.data.repository.MovieRepositoryImpl
+import com.wcp.tmdbcmp.data.repository.SettingRepositoryImpl
 import com.wcp.tmdbcmp.domain.repository.MovieRepository
+import com.wcp.tmdbcmp.domain.repository.SettingRepository
+import com.wcp.tmdbcmp.presentation.MainViewModel
 import com.wcp.tmdbcmp.presentation.discover.ui.DiscoverViewModel
 import com.wcp.tmdbcmp.presentation.discover.ui.details.MovieDetailsViewModel
 import com.wcp.tmdbcmp.presentation.favorites.FavoritesViewModel
@@ -26,11 +29,10 @@ val dataModule =
 
         single<MovieApi> { MovieApi(get()) }
 
-        single<MovieApi> { MovieApi(get()) }
-
         single<MovieRepository> { MovieRepositoryImpl(get(), get()) }
-    }
 
+        single<SettingRepository> { SettingRepositoryImpl(get()) }
+    }
 
 val databaseModule =
     module {
@@ -39,6 +41,7 @@ val databaseModule =
 
 val viewModelModule =
     module {
+        factoryOf(::MainViewModel)
         factoryOf(::MovieDetailsViewModel)
         factoryOf(::DiscoverViewModel)
         factoryOf(::FavoritesViewModel)
@@ -53,7 +56,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             dataModule,
             viewModelModule,
             platformModule(),
-            databaseModule
+            databaseModule,
         )
     }
 }

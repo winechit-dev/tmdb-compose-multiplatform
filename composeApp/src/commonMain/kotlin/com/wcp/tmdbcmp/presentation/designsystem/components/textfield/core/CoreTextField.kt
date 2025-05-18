@@ -51,19 +51,21 @@ fun CoreTextField(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = TextFieldDefaults.shape,
     colors: TextFieldColors = TextFieldDefaults.colors(),
-    contentPadding: PaddingValues = OutlinedTextFieldDefaults.contentPadding(
-        start = 21.dp,
-        end = 16.dp,
-        top = 0.dp,
-        bottom = 0.dp
-    )
+    contentPadding: PaddingValues =
+        OutlinedTextFieldDefaults.contentPadding(
+            start = 21.dp,
+            end = 16.dp,
+            top = 0.dp,
+            bottom = 0.dp,
+        ),
 ) {
     val textColor = if (enabled) colors.focusedTextColor else colors.disabledTextColor
     val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
-    val selectionColors = TextSelectionColors(
-        handleColor = MaterialTheme.colorScheme.primary,
-        backgroundColor = MaterialTheme.colorScheme.onPrimary
-    )
+    val selectionColors =
+        TextSelectionColors(
+            handleColor = MaterialTheme.colorScheme.primary,
+            backgroundColor = MaterialTheme.colorScheme.onPrimary,
+        )
     CompositionLocalProvider(LocalTextSelectionColors provides selectionColors) {
         BasicTextField(
             value = value,
@@ -98,9 +100,9 @@ fun CoreTextField(
                     enabled = enabled,
                     isError = isError,
                     interactionSource = interactionSource,
-                    colors = colors
+                    colors = colors,
                 )
-            }
+            },
         )
     }
 }

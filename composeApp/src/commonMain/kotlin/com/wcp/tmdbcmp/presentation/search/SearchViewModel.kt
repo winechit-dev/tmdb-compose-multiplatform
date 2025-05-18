@@ -21,9 +21,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    private val repository: MovieRepository
+    private val repository: MovieRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(SearchUIState())
     val uiState: StateFlow<SearchUIState> = _uiState.asStateFlow()
 
@@ -36,7 +35,6 @@ class SearchViewModel(
             .onEach { query -> if (query.isNotBlank()) searchMovie(query) }
             .launchIn(viewModelScope)
     }
-
 
     fun queryChanged(query: String) {
         _uiState.update {
@@ -66,7 +64,7 @@ class SearchViewModel(
                         it.copy(
                             movies = movies,
                             loading = false,
-                            userMessage = if (movies.isEmpty()) "No Result!" else ""
+                            userMessage = if (movies.isEmpty()) "No Result!" else "",
                         )
                     }
                 }
@@ -92,5 +90,5 @@ data class SearchUIState(
     val userMessage: String = "",
     val movies: List<SearchMovieUIModel>? = null,
     val genres: List<GenreModel> = emptyList(),
-    val focusRequested: Boolean = false
+    val focusRequested: Boolean = false,
 )

@@ -87,7 +87,7 @@ kotlin {
 
             // Coil Image loading
             implementation(libs.coil.compose)
-            implementation(libs.coil.network.okhttp)
+            implementation(libs.coil.network.ktor)
         }
 
         iosMain.dependencies {

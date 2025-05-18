@@ -17,7 +17,7 @@ fun AppAlertDialog(
     confirmButton: () -> Unit,
     dismissButtonText: String = "Cancel",
     dismissButton: (() -> Unit)? = null,
-    properties: DialogProperties = DialogProperties()
+    properties: DialogProperties = DialogProperties(),
 ) {
     AlertDialog(
         properties = properties,
@@ -38,19 +38,18 @@ fun AppAlertDialog(
                     onClick = dismissButton,
                     content = {
                         Text(dismissButtonText)
-                    }
+                    },
                 )
             }
         },
-
         confirmButton = {
             TextButton(
                 onClick = confirmButton,
                 content = {
                     Text(confirmButtonText)
-                }
+                },
             )
-        }
+        },
     )
 }
 
@@ -61,8 +60,7 @@ private fun AppAlertDialogPreview() {
         AppAlertDialog(
             title = "Error",
             body = "Message",
-            confirmButton = { }
+            confirmButton = { },
         )
     }
 }
-

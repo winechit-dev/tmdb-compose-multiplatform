@@ -18,4 +18,3 @@ object UserMessageManager {
         _messages.value = null
     }
 }
-

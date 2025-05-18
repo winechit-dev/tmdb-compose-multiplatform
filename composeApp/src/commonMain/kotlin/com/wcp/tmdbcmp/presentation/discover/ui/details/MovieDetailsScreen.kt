@@ -48,8 +48,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.wcp.tmdbcmp.presentation.discover.movieDetailsPreview
-import com.wcp.tmdbcmp.presentation.discover.moviesPreview
 import com.wcp.tmdbcmp.domain.model.CastModel
 import com.wcp.tmdbcmp.domain.model.GenreModel
 import com.wcp.tmdbcmp.presentation.designsystem.components.AppButton
@@ -64,10 +62,11 @@ import com.wcp.tmdbcmp.presentation.designsystem.utils.AppSharedElementType
 import com.wcp.tmdbcmp.presentation.designsystem.utils.detailBoundsTransform
 import com.wcp.tmdbcmp.presentation.designsystem.utils.nonSpatialExpressiveSpring
 import com.wcp.tmdbcmp.presentation.designsystem.utils.shimmerEffect
+import com.wcp.tmdbcmp.presentation.discover.movieDetailsPreview
+import com.wcp.tmdbcmp.presentation.discover.moviesPreview
 import com.wcp.tmdbcmp.presentation.ui.MovieItem
 import com.wcp.tmdbcmp.presentation.ui.model.MovieUIModel
 import com.wcp.tmdbcmp.presentation.ui.moviesLoading
-import kotlin.math.roundToInt
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 import tmdb_compose_multiplatform.composeapp.generated.resources.Res
@@ -75,16 +74,21 @@ import tmdb_compose_multiplatform.composeapp.generated.resources.ic_back
 import tmdb_compose_multiplatform.composeapp.generated.resources.ic_favorite_off
 import tmdb_compose_multiplatform.composeapp.generated.resources.ic_favorite_on
 import tmdb_compose_multiplatform.composeapp.generated.resources.ic_play
+import kotlin.math.roundToInt
 
 @Serializable
-data class MovieDetails(val id: Int, val name: String, val posterPath: String, val type: String)
+data class MovieDetails(
+    val id: Int,
+    val name: String,
+    val posterPath: String,
+    val type: String,
+)
 
 @Composable
 fun MovieDetailsScreen(
     args: MovieDetails,
-    onEvent: (MovieDetailsEvent) -> Unit
+    onEvent: (MovieDetailsEvent) -> Unit,
 ) {
-
     val viewModel: MovieDetailsViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -99,7 +103,7 @@ fun MovieDetailsScreen(
 
                 else -> onEvent(event)
             }
-        }
+        },
     )
 }
 
@@ -107,30 +111,35 @@ fun MovieDetailsScreen(
 internal fun MovieDetailsContent(
     args: MovieDetails,
     uiState: MovieDetailsUIState,
-    onEvent: (MovieDetailsEvent) -> Unit
+    onEvent: (MovieDetailsEvent) -> Unit,
 ) {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No Scope found")
-    val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No Scope found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No Scope found")
+    val animatedVisibilityScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No Scope found")
 
     val hapticFeedback = LocalHapticFeedback.current
 
     with(sharedTransitionScope) {
         Scaffold(
-            modifier = Modifier
-                .sharedBounds(
-                    sharedContentState = rememberSharedContentState(
-                        key = AppSharedElementKey(
-                            id = args.id.toString() + args.type,
-                            type = AppSharedElementType.Bounds
-                        )
+            modifier =
+                Modifier
+                    .sharedBounds(
+                        sharedContentState =
+                            rememberSharedContentState(
+                                key =
+                                    AppSharedElementKey(
+                                        id = args.id.toString() + args.type,
+                                        type = AppSharedElementType.Bounds,
+                                    ),
+                            ),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = detailBoundsTransform,
+                        exit = fadeOut(nonSpatialExpressiveSpring()),
+                        enter = fadeIn(nonSpatialExpressiveSpring()),
                     ),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    boundsTransform = detailBoundsTransform,
-                    exit = fadeOut(nonSpatialExpressiveSpring()),
-                    enter = fadeIn(nonSpatialExpressiveSpring()),
-                ),
             topBar = {
                 TopAppBar(
                     title = {},
@@ -140,7 +149,6 @@ internal fun MovieDetailsContent(
                             icon = Res.drawable.ic_back,
                             onClick = { onEvent(MovieDetailsEvent.NavigateUp) },
                         )
-
                     },
                     actions = {
                         AppIconButton(
@@ -151,26 +159,25 @@ internal fun MovieDetailsContent(
                                 onEvent(MovieDetailsEvent.OnToggleFavorite)
                             },
                         )
-                    }
+                    },
                 )
-            }
+            },
         ) { innerPadding ->
 
             LazyColumn(
                 contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding()),
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
-
                 headSection(
                     args = args,
                     voteAverage = uiState.details?.voteAverage,
                     releaseDate = uiState.details?.releaseDate,
-                    modifier = Modifier.aspectRatio(375f / 450f)
+                    modifier = Modifier.aspectRatio(375f / 450f),
                 )
 
                 overviewSection(
                     overview = uiState.details?.overview,
-                    video = uiState.details?.video ?: false
+                    video = uiState.details?.video ?: false,
                 )
 
                 castSection(cast = uiState.details?.cast.orEmpty())
@@ -184,104 +191,107 @@ internal fun MovieDetailsContent(
                         onEvent(
                             MovieDetailsEvent.MovieDetails(
                                 model = model,
-                                type = type
-                            )
+                                type = type,
+                            ),
                         )
-                    }
+                    },
                 )
             }
         }
     }
-
 }
 
-private fun LazyListScope.overviewSection(overview: String?, video: Boolean) {
-
+private fun LazyListScope.overviewSection(
+    overview: String?,
+    video: Boolean,
+) {
     if (overview == null) {
         item {
             Box(
-                modifier = Modifier
-                    .padding(horizontal = 20.dp)
-                    .fillMaxWidth()
-                    .height(14.dp)
-                    .shimmerEffect()
+                modifier =
+                    Modifier
+                        .padding(horizontal = 20.dp)
+                        .fillMaxWidth()
+                        .height(14.dp)
+                        .shimmerEffect(),
             )
             Box(
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .padding(horizontal = 20.dp)
-                    .width(240.dp)
-                    .height(14.dp)
-                    .shimmerEffect()
+                modifier =
+                    Modifier
+                        .padding(top = 10.dp)
+                        .padding(horizontal = 20.dp)
+                        .width(240.dp)
+                        .height(14.dp)
+                        .shimmerEffect(),
             )
-
         }
     } else if (overview.isNotBlank()) {
         item {
             Text(
                 text = overview,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(horizontal = 20.dp)
+                modifier = Modifier.padding(horizontal = 20.dp),
             )
             if (video) {
                 AppButton(
                     text = "Video trailer",
                     leadingIcon = Res.drawable.ic_play,
                     onClick = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 30.dp)
-                        .padding(horizontal = 20.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 30.dp)
+                            .padding(horizontal = 20.dp),
                 )
             }
         }
     }
 }
 
-fun LazyListScope.castSection(
-    cast: List<CastModel>
-) {
+fun LazyListScope.castSection(cast: List<CastModel>) {
     if (cast.isEmpty()) return
     item {
         Text(
             text = "Cast",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .padding(top = 30.dp)
+            modifier =
+                Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(top = 30.dp),
         )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(horizontal = 20.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
         ) {
             items(
                 items = cast,
                 key = { it.id },
-                contentType = { "Cast" }
+                contentType = { "Cast" },
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     AsyncImage(
                         model = it.profilePath,
                         contentDescription = "profilePath",
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(65.dp)
-                            .clip(CircleShape)
+                        modifier =
+                            Modifier
+                                .size(65.dp)
+                                .clip(CircleShape),
                     )
                     Text(
                         text = it.originalName,
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.width(65.dp),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -293,34 +303,36 @@ private fun LazyListScope.headSection(
     modifier: Modifier = Modifier,
     args: MovieDetails,
     voteAverage: Float?,
-    releaseDate: String?
+    releaseDate: String?,
 ) {
     item {
         Box(
             contentAlignment = Alignment.BottomCenter,
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth(),
         ) {
             AsyncImage(
                 model = args.posterPath,
                 contentDescription = "poster",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
             InnerBottomShadow()
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .padding(bottom = 40.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                        .padding(bottom = 40.dp),
             ) {
                 VoteAverage(
                     progress = voteAverage,
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .size(57.dp)
+                    modifier =
+                        Modifier
+                            .padding(end = 16.dp)
+                            .size(57.dp),
                 )
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     Text(
                         text = args.name,
@@ -329,10 +341,11 @@ private fun LazyListScope.headSection(
                     )
                     if (releaseDate == null) {
                         Box(
-                            modifier = Modifier
-                                .width(100.dp)
-                                .height(12.dp)
-                                .shimmerEffect()
+                            modifier =
+                                Modifier
+                                    .width(100.dp)
+                                    .height(12.dp)
+                                    .shimmerEffect(),
                         )
                     } else {
                         Text(
@@ -343,10 +356,11 @@ private fun LazyListScope.headSection(
                 }
             }
             HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .padding(bottom = 20.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                        .padding(bottom = 20.dp),
             )
         }
     }
@@ -359,23 +373,24 @@ private fun LazyListScope.categoriesSection(genres: List<GenreModel>) {
             text = "Categories",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .padding(top = 30.dp)
+            modifier =
+                Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(top = 30.dp),
         )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(horizontal = 20.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 22.dp)
-                .padding(top = 8.dp)
-
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 22.dp)
+                    .padding(top = 8.dp),
         ) {
             items(
                 items = genres,
                 key = { it.id },
-                contentType = { "genres" }
+                contentType = { "genres" },
             ) { genre ->
                 AppChip(label = genre.name)
             }
@@ -386,7 +401,7 @@ private fun LazyListScope.categoriesSection(genres: List<GenreModel>) {
 private fun LazyListScope.moviesSection(
     title: String,
     movies: List<MovieUIModel>?,
-    onClickItem: (model: MovieUIModel, type: String) -> Unit
+    onClickItem: (model: MovieUIModel, type: String) -> Unit,
 ) {
     if (movies?.isEmpty() == true) return
 
@@ -395,25 +410,26 @@ private fun LazyListScope.moviesSection(
             text = title,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 16.dp)
+            modifier =
+                Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(bottom = 16.dp),
         )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(horizontal = 20.dp),
-            modifier = Modifier.padding(bottom = 30.dp)
+            modifier = Modifier.padding(bottom = 30.dp),
         ) {
             if (movies != null) {
                 items(
                     items = movies,
                     key = { it.id },
-                    contentType = { "Movie" }
+                    contentType = { "Movie" },
                 ) { model ->
                     MovieItem(
                         model = model,
                         type = title,
-                        onClick = onClickItem
+                        onClick = onClickItem,
                     )
                 }
             } else {
@@ -424,19 +440,19 @@ private fun LazyListScope.moviesSection(
 }
 
 @Composable
-private fun InnerBottomShadow(
-    modifier: Modifier = Modifier,
-) {
-    val shadowGradient = Brush.verticalGradient(
-        0.2f to Color.Transparent,
-        0.8f to MaterialTheme.colorScheme.surface,
-        1f to MaterialTheme.colorScheme.surface
-    )
+private fun InnerBottomShadow(modifier: Modifier = Modifier) {
+    val shadowGradient =
+        Brush.verticalGradient(
+            0.2f to Color.Transparent,
+            0.8f to MaterialTheme.colorScheme.surface,
+            1f to MaterialTheme.colorScheme.surface,
+        )
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(shadowGradient)
-            .height(350.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(shadowGradient)
+                .height(350.dp),
     )
 }
 
@@ -448,18 +464,18 @@ private fun VoteAverage(
     AnimatedContent(
         targetState = progress != null && progress != 0f,
         label = "",
-        contentAlignment = Alignment.CenterStart
+        contentAlignment = Alignment.CenterStart,
     ) { targetState ->
         if (targetState) {
             Box(
                 modifier = modifier,
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(60.dp),
                     progress = { progress!! / 10 },
                     trackColor = MaterialTheme.colorScheme.outlineVariant,
-                    strokeCap = StrokeCap.Round
+                    strokeCap = StrokeCap.Round,
                 )
                 Text(
                     text = (progress!! * 10).roundToInt().toString().plus("%"),
@@ -469,27 +485,26 @@ private fun VoteAverage(
             }
         }
     }
-
-
 }
-
 
 @ThemePreviews
 @Composable
 private fun MovieDetailsContentPreview() {
     AppPreviewWithSharedTransitionLayout {
         MovieDetailsContent(
-            args = MovieDetails(
-                id = 2,
-                name = "Hello .NFQ",
-                posterPath = "",
-                type = ""
-            ),
-            uiState = MovieDetailsUIState(
-                details = movieDetailsPreview,
-                recommendations = moviesPreview
-            ),
-            onEvent = {}
+            args =
+                MovieDetails(
+                    id = 2,
+                    name = "Hello .NFQ",
+                    posterPath = "",
+                    type = "",
+                ),
+            uiState =
+                MovieDetailsUIState(
+                    details = movieDetailsPreview,
+                    recommendations = moviesPreview,
+                ),
+            onEvent = {},
         )
     }
 }
@@ -499,16 +514,18 @@ private fun MovieDetailsContentPreview() {
 private fun MovieDetailsLoadingContentPreview() {
     AppPreviewWithSharedTransitionLayout {
         MovieDetailsContent(
-            args = MovieDetails(
-                id = 2,
-                name = "Hello .NFQ",
-                posterPath = "",
-                type = ""
-            ),
-            uiState = MovieDetailsUIState(
-                details = null
-            ),
-            onEvent = {}
+            args =
+                MovieDetails(
+                    id = 2,
+                    name = "Hello .NFQ",
+                    posterPath = "",
+                    type = "",
+                ),
+            uiState =
+                MovieDetailsUIState(
+                    details = null,
+                ),
+            onEvent = {},
         )
     }
 }

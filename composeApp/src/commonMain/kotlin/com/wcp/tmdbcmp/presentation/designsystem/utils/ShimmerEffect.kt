@@ -20,33 +20,36 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 
-fun Modifier.shimmerEffect(
-    shape: Shape = RoundedCornerShape(2.dp)
-): Modifier = composed {
-    var size by remember {
-        mutableStateOf(IntSize.Zero)
-    }
-    val transition = rememberInfiniteTransition(label = "")
-    val startOffsetX by transition.animateFloat(
-        initialValue = -2 * size.width.toFloat(),
-        targetValue = 2 * size.width.toFloat(),
-        animationSpec = infiniteRepeatable(
-            animation = tween(1200)
-        ), label = ""
-    )
+fun Modifier.shimmerEffect(shape: Shape = RoundedCornerShape(2.dp)): Modifier =
+    composed {
+        var size by remember {
+            mutableStateOf(IntSize.Zero)
+        }
+        val transition = rememberInfiniteTransition(label = "")
+        val startOffsetX by transition.animateFloat(
+            initialValue = -2 * size.width.toFloat(),
+            targetValue = 2 * size.width.toFloat(),
+            animationSpec =
+                infiniteRepeatable(
+                    animation = tween(1200),
+                ),
+            label = "",
+        )
 
-    background(
-        brush = Brush.linearGradient(
-            colors = listOf(
-                MaterialTheme.colorScheme.surfaceVariant,
-                MaterialTheme.colorScheme.surfaceVariant,
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-            ),
-            start = Offset(startOffsetX, 0f),
-            end = Offset(startOffsetX + size.width.toFloat(), size.height.toFloat())
-        ),
-        shape = shape
-    ).onGloballyPositioned {
-        size = it.size
+        background(
+            brush =
+                Brush.linearGradient(
+                    colors =
+                        listOf(
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        ),
+                    start = Offset(startOffsetX, 0f),
+                    end = Offset(startOffsetX + size.width.toFloat(), size.height.toFloat()),
+                ),
+            shape = shape,
+        ).onGloballyPositioned {
+            size = it.size
+        }
     }
-}

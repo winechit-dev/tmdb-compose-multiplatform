@@ -10,7 +10,8 @@ import platform.UIKit.UIScreen
 actual object ScreenConfig {
     @OptIn(ExperimentalForeignApi::class)
     @Composable
-    actual fun getScreenWidth(): Dp {
-        return UIScreen.mainScreen.bounds.useContents { size.width }.dp
-    }
+    actual fun getScreenWidth(): Dp =
+        UIScreen.mainScreen.bounds
+            .useContents { size.width }
+            .dp
 }

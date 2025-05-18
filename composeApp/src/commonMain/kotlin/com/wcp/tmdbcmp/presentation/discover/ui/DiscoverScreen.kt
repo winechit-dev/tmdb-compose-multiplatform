@@ -34,11 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.wcp.tmdbcmp.presentation.discover.genresPreview
-import com.wcp.tmdbcmp.presentation.discover.model.GenreUIModel
-import com.wcp.tmdbcmp.presentation.discover.moviesPreview
-import com.wcp.tmdbcmp.presentation.discover.subtitle_discover
-import com.wcp.tmdbcmp.presentation.discover.title_discover
 import com.wcp.tmdbcmp.presentation.designsystem.components.AppFilterChip
 import com.wcp.tmdbcmp.presentation.designsystem.theme.AppPreviewWithSharedTransitionLayout
 import com.wcp.tmdbcmp.presentation.designsystem.theme.LocalEntryPadding
@@ -49,6 +44,11 @@ import com.wcp.tmdbcmp.presentation.designsystem.utils.AppSharedElementKey
 import com.wcp.tmdbcmp.presentation.designsystem.utils.AppSharedElementType
 import com.wcp.tmdbcmp.presentation.designsystem.utils.bounceClick
 import com.wcp.tmdbcmp.presentation.designsystem.utils.detailBoundsTransform
+import com.wcp.tmdbcmp.presentation.discover.genresPreview
+import com.wcp.tmdbcmp.presentation.discover.model.GenreUIModel
+import com.wcp.tmdbcmp.presentation.discover.moviesPreview
+import com.wcp.tmdbcmp.presentation.discover.subtitle_discover
+import com.wcp.tmdbcmp.presentation.discover.title_discover
 import com.wcp.tmdbcmp.presentation.ui.MovieItem
 import com.wcp.tmdbcmp.presentation.ui.model.MovieUIModel
 import com.wcp.tmdbcmp.presentation.utils.ScreenConfig
@@ -62,9 +62,7 @@ import tmdb_compose_multiplatform.composeapp.generated.resources.ic_search
 data object Discover
 
 @Composable
-fun DiscoverScreen(
-    onEvent: (DiscoverEvent) -> Unit
-) {
+fun DiscoverScreen(onEvent: (DiscoverEvent) -> Unit) {
     val viewModel: DiscoverViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -78,7 +76,7 @@ fun DiscoverScreen(
 
                 else -> onEvent(event)
             }
-        }
+        },
     )
 }
 
@@ -86,17 +84,17 @@ fun DiscoverScreen(
 internal fun DiscoverContent(
     modifier: Modifier = Modifier,
     uiState: DiscoverUIState,
-    onEvent: (DiscoverEvent) -> Unit
+    onEvent: (DiscoverEvent) -> Unit,
 ) {
     Surface(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         val top = LocalEntryPadding.current.calculateTopPadding()
         val bottom = LocalEntryPadding.current.calculateBottomPadding()
 
         LazyColumn(
             contentPadding = PaddingValues(top = 20.dp, bottom = bottom),
-            modifier = Modifier.padding(top = top)
+            modifier = Modifier.padding(top = top),
         ) {
             headerSection()
 
@@ -104,33 +102,33 @@ internal fun DiscoverContent(
 
             genresSection(
                 genres = uiState.genres,
-                onEvent = onEvent
+                onEvent = onEvent,
             )
 
             moviesSection(
                 title = "Today Trending",
                 movies = uiState.trendingTodayMovies,
-                onEvent = onEvent
+                onEvent = onEvent,
             )
             moviesSection(
                 title = "Popular",
                 movies = uiState.popularMovies,
-                onEvent = onEvent
+                onEvent = onEvent,
             )
             moviesSection(
                 title = "Upcoming",
                 movies = uiState.upcomingMovies,
-                onEvent = onEvent
+                onEvent = onEvent,
             )
             moviesSection(
                 title = "Now Playing",
                 movies = uiState.nowPlayingMovies,
-                onEvent = onEvent
+                onEvent = onEvent,
             )
             moviesSection(
                 title = "Top Rated",
                 movies = uiState.topRatedMovies,
-                onEvent = onEvent
+                onEvent = onEvent,
             )
         }
     }
@@ -142,81 +140,84 @@ private fun LazyListScope.headerSection() {
             text = title_discover,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
+            modifier =
+                Modifier
+                    .padding(horizontal = 20.dp),
         )
         Text(
             text = subtitle_discover,
             style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .padding(top = 6.dp)
+            modifier =
+                Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(top = 6.dp),
         )
     }
 }
 
-private fun LazyListScope.searchBarSection(
-    onEvent: (DiscoverEvent) -> Unit
-) {
-
-
+private fun LazyListScope.searchBarSection(onEvent: (DiscoverEvent) -> Unit) {
     stickyHeader {
-        val sharedTransitionScope = LocalSharedTransitionScope.current
-            ?: throw IllegalStateException("No Scope found")
-        val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
-            ?: throw IllegalStateException("No Scope found")
+        val sharedTransitionScope =
+            LocalSharedTransitionScope.current
+                ?: throw IllegalStateException("No Scope found")
+        val animatedVisibilityScope =
+            LocalNavAnimatedVisibilityScope.current
+                ?: throw IllegalStateException("No Scope found")
 
         with(sharedTransitionScope) {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface.copy(alpha = SurfaceContainerAlpha))
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surface.copy(alpha = SurfaceContainerAlpha)),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .bounceClick()
-                        .fillMaxWidth()
-                        .padding(20.dp)
-                        .sharedBounds(
-                            sharedContentState = rememberSharedContentState(
-                                key = AppSharedElementKey(
-                                    id = "",
-                                    type = AppSharedElementType.SearchBar
-                                )
-                            ),
-                            animatedVisibilityScope = animatedVisibilityScope,
-                            boundsTransform = detailBoundsTransform,
-                            enter = fadeIn(),
-                            exit = fadeOut()
-                        )
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                        .height(46.dp)
-                        .clickable { onEvent(DiscoverEvent.Search) }
+                    modifier =
+                        Modifier
+                            .bounceClick()
+                            .fillMaxWidth()
+                            .padding(20.dp)
+                            .sharedBounds(
+                                sharedContentState =
+                                    rememberSharedContentState(
+                                        key =
+                                            AppSharedElementKey(
+                                                id = "",
+                                                type = AppSharedElementType.SearchBar,
+                                            ),
+                                    ),
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                boundsTransform = detailBoundsTransform,
+                                enter = fadeIn(),
+                                exit = fadeOut(),
+                            ).clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                            .height(46.dp)
+                            .clickable { onEvent(DiscoverEvent.Search) },
                 ) {
                     Text(
                         text = "Search",
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 21.dp)
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .padding(start = 21.dp),
                     )
                     Icon(
                         painter = painterResource(Res.drawable.ic_search),
                         contentDescription = "",
-                        modifier = Modifier.padding(end = 16.dp)
+                        modifier = Modifier.padding(end = 16.dp),
                     )
                 }
             }
         }
-
     }
 }
 
 private fun LazyListScope.moviesSection(
     title: String,
     movies: List<MovieUIModel>?,
-    onEvent: (DiscoverEvent) -> Unit
+    onEvent: (DiscoverEvent) -> Unit,
 ) {
     if (movies?.isEmpty() == true) return
 
@@ -225,27 +226,28 @@ private fun LazyListScope.moviesSection(
             text = title,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 16.dp)
+            modifier =
+                Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(bottom = 16.dp),
         )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(horizontal = 20.dp),
-            modifier = Modifier.padding(bottom = 30.dp)
+            modifier = Modifier.padding(bottom = 30.dp),
         ) {
             if (movies != null) {
                 items(
                     items = movies,
                     key = { it.id },
-                    contentType = { "Movie" }
+                    contentType = { "Movie" },
                 ) { model ->
                     MovieItem(
                         model = model,
                         type = title,
                         onClick = { it, type ->
                             onEvent(DiscoverEvent.MovieDetails(model = it, type = type))
-                        }
+                        },
                     )
                 }
             } else {
@@ -259,35 +261,36 @@ private fun LazyListScope.loading() {
     items(
         items = (1..3).toList(),
         key = { it },
-        contentType = { "loading" }
+        contentType = { "loading" },
     ) {
         Box(
-            modifier = Modifier
-                .widthIn(max = (ScreenConfig.getScreenWidth() / 3))
-                .aspectRatio(124f / 188f)
+            modifier =
+                Modifier
+                    .widthIn(max = (ScreenConfig.getScreenWidth() / 3))
+                    .aspectRatio(124f / 188f),
         )
     }
 }
 
 private fun LazyListScope.genresSection(
     genres: List<GenreUIModel>,
-    onEvent: (DiscoverEvent) -> Unit
+    onEvent: (DiscoverEvent) -> Unit,
 ) {
     item {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(horizontal = 20.dp),
-            modifier = Modifier.padding(bottom = 30.dp)
+            modifier = Modifier.padding(bottom = 30.dp),
         ) {
             items(
                 items = genres,
                 key = { it.id },
-                contentType = { "Genre" }
+                contentType = { "Genre" },
             ) { genre ->
                 AppFilterChip(
                     selected = genre.selected,
                     label = genre.name,
-                    onClick = { onEvent(DiscoverEvent.SelectedGenre(genre.id)) }
+                    onClick = { onEvent(DiscoverEvent.SelectedGenre(genre.id)) },
                 )
             }
         }
@@ -301,15 +304,16 @@ const val SurfaceContainerAlpha = 0.98f
 internal fun DiscoverContentPreview() {
     AppPreviewWithSharedTransitionLayout {
         DiscoverContent(
-            uiState = DiscoverUIState(
-                genres = genresPreview,
-                trendingTodayMovies = moviesPreview,
-                upcomingMovies = moviesPreview,
-                popularMovies = moviesPreview,
-                topRatedMovies = moviesPreview,
-                nowPlayingMovies = moviesPreview
-            ),
-            onEvent = {}
+            uiState =
+                DiscoverUIState(
+                    genres = genresPreview,
+                    trendingTodayMovies = moviesPreview,
+                    upcomingMovies = moviesPreview,
+                    popularMovies = moviesPreview,
+                    topRatedMovies = moviesPreview,
+                    nowPlayingMovies = moviesPreview,
+                ),
+            onEvent = {},
         )
     }
 }
