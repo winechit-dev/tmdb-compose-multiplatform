@@ -26,7 +26,7 @@ kotlin {
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "TMDBComposeMultiplatformApp"
+            baseName = "ComposeApp"
             isStatic = true
             // Required when using NativeSQLiteDriver
             linkerOpts.add("-lsqlite3")
